@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">University Project</string>
+    <string name="rock">Rock</string>
+    <string name="paper">Paper</string>
+    <string name="scissors">Scissor</string>
+    <string name="your_move">Your move:</string>
+    <string name="computer_move">Computer\'s move:</string>
+    <string name="computer">Computer</string>
+    <string name="you">You</string>
+</resources>
