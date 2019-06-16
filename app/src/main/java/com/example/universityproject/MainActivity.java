@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     Button btn_rock, btn_paper, btn_scissors;
     TextView score_txt, com_txt, player_txt;
     ImageView player_img, computer_img;
+    Choice playerChoice, comChoice;
     int p_score=0, c_score=0;
 
     @Override
@@ -33,7 +34,20 @@ public class MainActivity extends AppCompatActivity {
         com_txt = (TextView) findViewById(R.id.com_move_text);
         score_txt = (TextView) findViewById(R.id.score_txt);
 
+        if (savedInstanceState != null){
+            p_score = savedInstanceState.getInt("pl_score");
+            c_score = savedInstanceState.getInt("co_score");
+            playerChoice = (Choice) savedInstanceState.get("player_choice");
+            comChoice = (Choice) savedInstanceState.get("computer_choice");
+            if (playerChoice != null && comChoice != null) {
+                player_txt.setText("Your move: " +playerChoice.getName());
+                com_txt.setText("Computer's move: " +comChoice.getName());
+                player_img.setImageResource(playerChoice.getImage());
+                computer_img.setImageResource(comChoice.getImage());
+            }
+        }
         score_txt.setText(p_score + "-" + c_score);
+
     }
 
 
@@ -45,17 +59,17 @@ public class MainActivity extends AppCompatActivity {
         }else if (view.getId() == R.id.btn_scissors) {
             selection = 2;
         }
-        Choice playChoice = Choice.values()[selection];
-        player_img.setImageResource(playChoice.getImage());
-        player_txt.setText("Your move: " + playChoice.getName());
+        playerChoice = Choice.values()[selection];
+        player_img.setImageResource(playerChoice.getImage());
+        player_txt.setText("Your move: " + playerChoice.getName());
 
         // computer should make its choice
-        Choice comChoice = computerSelection();
+        comChoice = computerSelection();
         computer_img.setImageResource(comChoice.getImage());
         com_txt.setText("Computer's move: " + comChoice.getName());
 
         // after player's and computer's selections we should determine the result
-        displayResult(playChoice.getName(), comChoice.getName());
+        displayResult(playerChoice.getName(), comChoice.getName());
 
     }
 
@@ -95,6 +109,16 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(MainActivity.this,  msg, Toast.LENGTH_SHORT).show();
     }
 
-
-
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("pl_score", p_score);
+        outState.putInt("co_score", c_score);
+        // The choice of each player, when screen orientation changes, is passed
+        // in order to know both text and image by passing only 1 parameter
+        if (playerChoice != null && comChoice != null) {
+           outState.putSerializable("player_choice", playerChoice);
+            outState.putSerializable("computer_choice", comChoice);
+        }
+    }
 }
